@@ -19,12 +19,18 @@ def create_steering_control(packer, apply_steer, frame, steer_step):
 def create_steering_status(packer, apply_steer, frame, steer_step):
   return packer.make_can_msg("ES_LKAS_State", 0, {})
 
-def create_es_distance(packer, es_distance_msg, pcm_cancel_cmd):
+def create_es_distance(packer, es_distance_msg, pcm_cancel_cmd, cspeed_dn_cmd, cspeed_up_cmd):
 
   values = copy.copy(es_distance_msg)
   if pcm_cancel_cmd:
     values["Cruise_Cancel"] = 1
 
+  if ((cspeed_dn_cmd == True) and (cspeed_up_cmd == False)):
+    values["Cruise_Set"] = 1
+    
+  if ((cspeed_up_cmd == True) and (cspeed_dn_cmd == False)):
+    values["Cruise_Resume"] = 1
+  
   return packer.make_can_msg("ES_Distance", 0, values)
 
 def create_es_lkas(packer, es_lkas_msg, enabled, visual_alert, left_line, right_line, left_lane_depart, right_lane_depart):
@@ -60,6 +66,17 @@ def create_es_lkas(packer, es_lkas_msg, enabled, visual_alert, left_line, right_
   values["LKAS_Right_Line_Visible"] = int(right_line)
 
   return packer.make_can_msg("ES_LKAS_State", 0, values)
+
+def create_cruise_buttons(packer, sw_cruise_buttons_msg, cspeed_dn_cmd, cspeed_up_cmd):
+  values = copy.copy(sw_cruise_buttons_msg)
+  
+  if ((cspeed_dn_cmd == True) and (cspeed_up_cmd == False)):
+    values["Set"] = 1
+    
+  if ((cspeed_up_cmd == True) and (cspeed_dn_cmd == False)):
+    values["Resume"] = 1
+  
+  return packer.make_can_msg("Cruise_Buttons", 0, values)
 
 # *** Subaru Pre-global ***
 
