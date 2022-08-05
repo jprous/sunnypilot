@@ -72,6 +72,7 @@ class CarState(CarStateBase):
       ret.cruiseState.nonAdaptive = cp_cam.vl["ES_DashStatus"]["Conventional_Cruise"] == 1
       self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
     self.es_distance_msg = copy.copy(cp_cam.vl["ES_Distance"])
+    self.sw_cruise_buttons_msg = copy.copy(cp.vl["Cruise_Buttons"])
 
     return ret
 
@@ -98,6 +99,13 @@ class CarState(CarStateBase):
       ("DOOR_OPEN_RR", "BodyInfo"),
       ("DOOR_OPEN_RL", "BodyInfo"),
       ("Gear", "Transmission"),
+      
+      ("Counter","Cruise_Buttons"),
+      ("Signal1","Cruise_Buttons"),
+      ("Main","Cruise_Buttons"),
+      ("Set","Cruise_Buttons"),
+      ("Resume","Cruise_Buttons"),
+      ("Signal2","Cruise_Buttons"), 
     ]
 
     checks = [
@@ -109,6 +117,7 @@ class CarState(CarStateBase):
       ("Transmission", 100),
       ("Steering_Torque", 50),
       ("BodyInfo", 1),
+      ("Cruise_Buttons", 20),
     ]
 
     if CP.enableBsm:
